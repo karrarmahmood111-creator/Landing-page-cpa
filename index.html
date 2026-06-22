@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Wealth Library - Premium Financial Hub</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <style>
+        /* عرض النص فوراً بخط احتياطي لحين تحميل الخط الرئيسي لمنع الشاشة السوداء */
+        @font-face {
+            font-family: 'Plus Jakarta Sans';
+            font-display: swap;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+        
+        body { 
+            background: #04080F; 
+            background-image: radial-gradient(circle at 50% 0%, #0d2216 0%, #04080f 70%); 
+            color: #ffffff; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            line-height: 1.4;
+            padding: 10px 15px 40px 15px;
+        }
+
+        /* منع التمرير عند تفعيل القفل */
+        body.locked {
+            overflow: hidden !important;
+            height: 100vh !important;
+        }
+        
+        .main-container { 
+            width: 100%; 
+            max-width: 1100px; 
+            margin: 0 auto;
+        }
+
+        /* --- 1. الهيدر العلوي --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0 15px 0; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            margin-bottom: 20px; 
+        }
+        .logo-area { display: flex; align-items: center; gap: 8px; }
+        .logo-area i { font-size: 1.6rem; color: #22c55e; display: inline-block; min-width: 26px; }
+        .logo-text h2 { font-size: 1rem; font-weight: 800; letter-spacing: -0.5px; }
+        .logo-text p { font-size: 0.65rem; color: #6b7280; font-weight: 500; }
+        
+        .stats-area { display: flex; gap: 10px; }
+        .stat-badge {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 6px 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .stat-badge i { color: #eab308; display: inline-block; }
+
+        /* --- 2. قسم العناوين --- */
+        .hero-section { text-align: center; margin-bottom: 25px; } 
+        .promo-pill {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            display: inline-block;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+        .hero-section h1 {
+            font-size: 1.9rem; 
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+        .hero-section h1 span {
+            background: linear-gradient(to right, #22c55e, #4ade80);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-section .hero-desc {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            max-width: 600px;
+            margin: 0 auto 15px auto;
+        }
+        
+        .trust-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            color: #9ca3af;
+            font-weight: 600;
+        }
+        .trust-item i { color: #22c55e; font-size: 0.8rem; display: inline-block; }
+
+        .section-divider {
+            text-align: center;
+            margin: 25px 0 20px 0; 
+            position: relative;
+        }
+        .section-divider h3 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            display: inline-block;
+            background: #04080F;
+            padding: 0 10px;
+            position: relative;
+            z-index: 2;
+        }
+        .section-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.07), transparent);
+            z-index: 1;
+        }
+        .section-divider p { color: #4b5563; font-size: 0.8rem; margin-top: 3px; }
+
+        /* --- 3. شبكة الكتب --- */
+        .books-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 12px; 
+            margin-bottom: 40px;
+        }
+
+        .book-card { 
+            background: #0b1320;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px; 
+            padding: 12px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; 
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+            will-change: transform;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-4px); 
+            border-color: rgba(34, 197, 94, 0.3); 
+            box-shadow: 0 15px 30px rgba(34, 197, 94, 0.12); 
+        }
+        
+        .card-number {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            color: #ffffff;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .book-info-wrapper {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        
+        .book-img { 
+            width: 100%; 
+            height: 150px; 
+            margin-bottom: 12px; 
+            border-radius: 10px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease;
+        }
+        
+        .book-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+        }
+        .book-card:hover .book-img { transform: scale(1.03); }
+
+        .book-title { 
+            font-size: 0.85rem; 
+            font-weight: 800; 
+            margin-bottom: 4px; 
+            color: #ffffff; 
+            letter-spacing: -0.3px;
+        }
+
+        .book-caption {
+            font-size: 0.7rem;
+            color: #6b7280;
+            margin-bottom: 10px;
+            line-height: 1.3;
+            flex-grow: 1; 
+        }
+
+        .book-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.65rem;
+            color: #9ca3af;
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        .book-meta i { display: inline-block; margin-right: 2px; }
+        .meta-pdf {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1px 5px;
+            border-radius: 3px;
+            color: #ffffff;
+            font-weight: 700;
+        }
+        
+        .btn { 
+            background: linear-gradient(135deg, #22c55e, #15803d); 
+            color: #ffffff; 
+            border: none; 
+            padding: 9px 0; 
+            width: 100%; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 800;
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+            margin-top: auto; 
+        }
+        .btn i { display: inline-block; }
+        .btn:hover { 
+            background: linear-gradient(135deg, #16a34a, #166534);
+            box-shadow: 0 6px 15px rgba(34, 197, 94, 0.35);
+        }
+        .btn:active { transform: scale(0.97); }
+
+        /* --- 4. فوتر المميزات --- */
+        .features-footer {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 20px 15px;
+            border-radius: 16px;
+            margin-top: 30px;
+        }
+        .f-item { display: flex; gap: 10px; }
+        .f-item i { font-size: 1.1rem; color: #22c55e; margin-top: 2px; display: inline-block; }
+        .f-item h4 { font-size: 0.8rem; font-weight: 700; margin-bottom: 2px; }
+        .f-item p { font-size: 0.7rem; color: #6b7280; line-height: 1.3; }
+
+        /* --- 5. قسم الأسئلة الشائعة --- */
+        .faq-section { margin-top: 40px; }
+        .faq-title { text-align: center; font-size: 1.15rem; font-weight: 800; margin-bottom: 20px; }
+        .faq-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        
+        .faq-item {
+            background: #0b1320;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: border-color 0.25s ease, background-color 0.25s ease;
+        }
+        
+        .faq-item.active {
+            border-color: rgba(34, 197, 94, 0.3);
+            background: rgba(34, 197, 94, 0.01);
+        }
+
+        .faq-header {
+            padding: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        .faq-header p { font-size: 0.8rem; font-weight: 600; color: #e5e7eb; }
+        .faq-header i { color: #4b5563; font-size: 0.75rem; transition: transform 0.25s ease; display: inline-block; }
+        
+        .faq-item.active .faq-header i {
+            transform: rotate(180deg);
+            color: #22c55e;
+        }
+
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0 16px;
+        }
+        .faq-content .faq-text {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            padding-bottom: 14px;
+            line-height: 1.4;
+        }
+        
+        .copyright { text-align: center; margin-top: 40px; font-size: 0.65rem; color: #374151; }
+
+        /* --- 6. تصميم القفل الإجباري (CPA Locker Overlay) --- */
+        .cpa-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(4, 8, 15, 0.98);
+            background-image: radial-gradient(circle at 50% 30%, #0d2216 0%, #04080f 80%);
+            z-index: 999999;
+            display: none; /* مخفي افتراضياً */
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .locker-box {
+            background: #0b1320;
+            border: 2px solid rgba(34, 197, 94, 0.4);
+            border-radius: 24px;
+            padding: 30px 20px;
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(34, 197, 94, 0.15);
+            animation: lockerPop 0.3s ease-out forwards;
+        }
+        @keyframes lockerPop {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .locker-box i.lock-icon {
+            font-size: 3rem;
+            color: #22c55e;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(34, 197, 94, 0.5);
+        }
+        .locker-box h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: 8px; color: #ffffff; }
+        .locker-box p { font-size: 0.85rem; color: #9ca3af; margin-bottom: 25px; line-height: 1.4; }
+        
+        /* مكان وضع كود أو أدوات شركة الـ CPA */
+        .cpa-offers-container {
+            min-height: 150px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* شاشات التجاوب للكبير */
+        @media (min-width: 650px) {
+            .books-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+            .features-footer { grid-template-columns: repeat(4, 1fr); }
+            .hero-section h1 { font-size: 3rem; }
+            .book-img { height: 210px; } 
+        }
+
+        @media (min-width: 950px) {
+            .books-grid { grid-template-columns: repeat(4, 1fr); gap: 22px; }
+            .faq-grid { grid-template-columns: 1fr 1fr; gap: 15px; }
+            .hero-section h1 { font-size: 3.5rem; }
+            body { padding-top: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    
+    <header>
+        <div class="logo-area">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <div class="logo-text">
+                <h2>Wealth Library</h2>
+                <p>Learn. Grow. Succeed.</p>
+            </div>
+        </div>
+        <div class="stats-area">
+            <div class="stat-badge"><i class="fa-solid fa-users"></i> 12,000+ Readers</div>
+            <div class="stat-badge"><i class="fa-solid fa-star"></i> 4.9/5 Rating</div>
+        </div>
+    </header>
+
+    <div class="hero-section">
+        <div class="promo-pill">100% FREE PDF DOWNLOADS</div>
+        <h1>Unlock Your <span>Financial Future</span></h1>
+        <p class="hero-desc">Download 4 best-selling books on wealth, investing, business and financial freedom instantly.</p>
+        
+        <div class="trust-row">
+            <div class="trust-item"><i class="fa-solid fa-shield-halved"></i> Safe & Secure</div>
+            <div class="trust-item"><i class="fa-solid fa-bolt"></i> Instant Download</div>
+            <div class="trust-item"><i class="fa-solid fa-circle-check"></i> Verified PDF Files</div>
+        </div>
+    </div>
+
+    <div class="section-divider">
+        <h3>4 Must-Read Masterpieces</h3>
+        <p>Carefully selected to transform your mindset</p>
+    </div>
+
+    <div class="books-grid">
+        <div class="book-card">
+            <div class="book-info-wrapper">
+                <div class="card-number">1</div>
+                <div class="book-img">
+                    <img src="book1.webp" alt="Rich Dad Poor Dad" width="150" height="210" loading="lazy">
+                </div>
+                <div class="book-title">Rich Dad Poor Dad</div>
+                <div class="book-caption">What the rich teach their kids about money that the poor do not!</div>
+                <div class="book-meta"><span><i class="fa-regular fa-file-lines"></i> 220 Pages</span><span class="meta-pdf">PDF</span></div>
+            </div>
+            <button class="btn" onclick="startDownload('book1')"><i class="fa-solid fa-download"></i> DOWNLOAD</button>
+        </div>
+
+        <div class="book-card">
+            <div class="book-info-wrapper">
+                <div class="card-number">2</div>
+                <div class="book-img">
+                    <img src="book2.webp" alt="How to Win at the Sport of Business" width="150" height="210" loading="lazy">
+                </div>
+                <div class="book-title">Sport of Business</div>
+                <div class="book-caption">Inspirational insights and strategic lessons from a billionaire.</div>
+                <div class="book-meta"><span><i class="fa-regular fa-file-lines"></i> 180 Pages</span><span class="meta-pdf">PDF</span></div>
+            </div>
+            <button class="btn" onclick="startDownload('book2')"><i class="fa-solid fa-download"></i> DOWNLOAD</button>
+        </div>
+
+        <div class="book-card">
+            <div class="book-info-wrapper">
+                <div class="card-number">3</div>
+                <div class="book-img">
+                    <img src="book3.webp" alt="The 4-Hour Workweek" width="150" height="210" loading="lazy">
+                </div>
+                <div class="book-title">4-Hour Workweek</div>
+                <div class="book-caption">Escape the 9-5 routine, live anywhere, and join the new rich.</div>
+                <div class="book-meta"><span><i class="fa-regular fa-file-lines"></i> 340 Pages</span><span class="meta-pdf">PDF</span></div>
+            </div>
+            <button class="btn" onclick="startDownload('book3')"><i class="fa-solid fa-download"></i> DOWNLOAD</button>
+        </div>
+
+        <div class="book-card">
+            <div class="book-info-wrapper">
+                <div class="card-number">4</div>
+                <div class="book-img">
+                    <img src="book4.webp" alt="The Psychology of Money" width="150" height="210" loading="lazy">
+                </div>
+                <div class="book-title">Psychology of Money</div>
+                <div class="book-caption">Timeless lessons on wealth, greed, happiness, and smart behavior.</div>
+                <div class="book-meta"><span><i class="fa-regular fa-file-lines"></i> 256 Pages</span><span class="meta-pdf">PDF</span></div>
+            </div>
+            <button class="btn" onclick="startDownload('book4')"><i class="fa-solid fa-download"></i> DOWNLOAD</button>
+        </div>
+    </div>
+
+    <div class="features-footer">
+        <div class="f-item">
+            <i class="fa-solid fa-circle-down"></i>
+            <div>
+                <h4>Instant Access</h4>
+                <p>Get immediate access to books.</p>
+            </div>
+        </div>
+        <div class="f-item">
+            <i class="fa-solid fa-shield-virus"></i>
+            <div>
+                <h4>Verified & Safe</h4>
+                <p>Files are checked and 100% clean.</p>
+            </div>
+        </div>
+        <div class="f-item">
+            <i class="fa-solid fa-mobile-screen-button"></i>
+            <div>
+                <h4>All Devices</h4>
+                <p>Read perfectly on phone or tablet.</p>
+            </div>
+        </div>
+        <div class="f-item">
+            <i class="fa-solid fa-infinity"></i>
+            <div>
+                <h4>Lifetime Access</h4>
+                <p>Download once, keep forever.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <div class="faq-title">Frequently Asked Questions</div>
+        <div class="faq-grid">
+            
+            <div class="faq-item">
+                <div class="faq-header" onclick="toggleFaq(this)">
+                    <p>Are the books really free?</p>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-content">
+                    <div class="faq-text">Yes, absolutely! All financial masterpieces hosted on our premium hub are completely free to download with high-speed secure server links.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-header" onclick="toggleFaq(this)">
+                    <p>What format are the books in?</p>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-content">
+                    <div class="faq-text">All books are provided in official high-quality PDF format, optimized to render crisp texts and graphics on all types of mobile devices.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-header" onclick="toggleFaq(this)">
+                    <p>How will I receive the books?</p>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-content">
+                    <div class="faq-text">Once you click the "Download" button and pass our quick secure verification step, the file will automatically start saving onto your storage.</div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-header" onclick="toggleFaq(this)">
+                    <p>Are these safe to download?</p>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="faq-content">
+                    <div class="faq-text">Yes, 100%. Our platform relies on Netlify Enterprise architectures to guarantee that every file blob is thoroughly clean and safe.</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="copyright">
+        &copy; 2026 Wealth Library Premium Hub. Verified Secure Connection.
+    </div>
+
+</div>
+
+<!-- نافذة القفل الإجباري التلقائي (CPA Content Locker Overlay) -->
+<div class="cpa-overlay" id="cpaLockerOverlay">
+    <div class="locker-box">
+        <i class="fa-solid fa-shield-halved lock-icon"></i>
+        <h2>Human Verification</h2>
+        <p>To prevent automated bot abuse and keep these premium books 100% free, please complete one quick offer below. Your PDF will download automatically right after verification!</p>
+        
+        <div class="cpa-offers-container" id="cpaOffersContainer">
+            <!-- ضع كود الـ Widget أو الـ Iframe الخاص بشركة الـ CPA هنا -->
+            <p style="color: #6b7280; font-size: 0.8rem;"><i class="fa-solid fa-spinner fa-spin"></i> Loading Secure Verification...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleFaq(headerElement) {
+        const currentItem = headerElement.parentElement;
+        const content = currentItem.querySelector('.faq-content');
+        const isActive = currentItem.classList.contains('active');
+        
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.classList.remove('active');
+            item.querySelector('.faq-content').style.maxHeight = null;
+        });
+
+        if (!isActive) {
+            currentItem.classList.add('active');
+            content.style.maxHeight = content.scrollHeight + "px";
+        }
+    }
+
+    // روابط ملفات الـ PDF الأصلية
+    const fileLinks = {
+        'book1': { url: 'https://files.catbox.moe/d2mx7y.pdf', name: 'Rich_Dad_Poor_Dad.pdf' },
+        'book2': { url: 'https://files.catbox.moe/d4i3bk.pdf', name: 'How_to_Win_at_the_Sport_of_Business.pdf' },
+        'book3': { url: 'https://files.catbox.moe/58gysm.pdf', name: 'The_4_Hour_Workweek.pdf' },
+        'book4': { url: 'https://files.catbox.moe/psscpf.pdf', name: 'The_Psychology_of_Money.pdf' }
+    };
+
+    let activeBookId = null;
+    
+    // فحص المتصفح: هل هذا العميل قد أكمل العرض مسبقاً؟
+    let isUnlocked = localStorage.getItem('library_unlocked') === 'true'; 
+
+    function startDownload(id) {
+        activeBookId = id;
+        if (isUnlocked) {
+            executeDownload(activeBookId);
+        } else {
+            // إظهار قفل المحتوى بشكل إجباري ومنع التمرير
+            document.getElementById('cpaLockerOverlay').style.display = 'flex';
+            document.body.classList.add('locked');
+            
+            // تنبيه تقني: هنا يتم استدعاء سكريبت شركة الـ CPA تلقائياً إذا كانت تدعم ذلك
+            // مثلاً إذا كنت تستخدم OGAds يمكنك استدعاء دالة القفل الخاصة بهم هنا: og_load_locker();
+        }
+    }
+
+    // الدالة السحرية: يتم استدعاؤها فور إكمال العرض بنجاح من شركة الـ CPA
+    function onCPAComplete() {
+        isUnlocked = true;
+        localStorage.setItem('library_unlocked', 'true'); // حفظ الحالة للأبد لهذا العميل
+        
+        // إخفاء القفل وإعادة التمرير لوضعه الطبيعي
+        document.getElementById('cpaLockerOverlay').style.display = 'none';
+        document.body.classList.remove('locked');
+        
+        // تحميل الكتاب الذي ضغط عليه في البداية تلقائياً
+        if (activeBookId) {
+            executeDownload(activeBookId);
+        }
+    }
+
+    function executeDownload(id) {
+        const fileData = fileLinks[id];
+        if (!fileData) return;
+        
+        fetch(fileData.url, { method: 'GET', mode: 'cors' })
+            .then(res => {
+                if (res.ok) return res.blob();
+                throw new Error('Network issue');
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const dl = document.createElement('a');
+                dl.href = url;
+                dl.download = fileData.name; 
+                document.body.appendChild(dl);
+                dl.click();
+                document.body.removeChild(dl);
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(err => {
+                const dl = document.createElement('a');
+                dl.href = fileData.url;
+                dl.download = fileData.name;
+                document.body.appendChild(dl);
+                dl.click();
+                document.body.removeChild(dl);
+            });
+    }
+</script>
+
+</body>
+</html>
