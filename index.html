@@ -613,7 +613,6 @@
         </div>
     </div>
 </div>
-
 <script>
     function toggleFaq(headerElement) {
         const currentItem = headerElement.parentElement;
@@ -641,8 +640,18 @@
 
     let activeBookId = null;
     
-    // فحص المتصفح: هل هذا العميل قد أكمل العرض مسبقاً؟
-    let isUnlocked = localStorage.getItem('library_unlocked') === 'true'; 
+    // --- التعديل الجديد: فحص المتصفح بناءً على نظام الـ 24 ساعة ---
+    let isUnlocked = false;
+    const unlockTime = localStorage.getItem('library_unlock_time');
+
+    if (unlockTime) {
+        // حساب الوقت الذي مر (24 ساعة = 86,400,000 ملي ثانية)
+        if (Date.now() - parseInt(unlockTime) < 86400000) {
+            isUnlocked = true; // لم تمر 24 ساعة بعد، القفل مفتوح
+        } else {
+            localStorage.removeItem('library_unlock_time'); // مرت 24 ساعة، إعادة ضبط الحالة
+        }
+    }
 
     function startDownload(id) {
         activeBookId = id;
@@ -653,15 +662,18 @@
             document.getElementById('cpaLockerOverlay').style.display = 'flex';
             document.body.classList.add('locked');
             
-            // تنبيه تقني: هنا يتم استدعاء سكريبت شركة الـ CPA تلقائياً إذا كانت تدعم ذلك
-            // مثلاً إذا كنت تستخدم OGAds يمكنك استدعاء دالة القفل الخاصة بهم هنا: og_load_locker();
+            // تنبيه تقني: هنا يتم استدعاء سكريبت OGAds
+            if (typeof og_load_locker === 'function') {
+                og_load_locker();
+            }
         }
     }
 
-    // الدالة السحرية: يتم استدعاؤها فور إكمال العرض بنجاح من شركة الـ CPA
+    // الدالة التي يتم استدعاؤها فور إكمال العرض بنجاح من OGAds
     function onCPAComplete() {
         isUnlocked = true;
-        localStorage.setItem('library_unlocked', 'true'); // حفظ الحالة للأبد لهذا العميل
+        // حفظ الوقت الحالي (بالملي ثانية) لبدء العد التنازلي للـ 24 ساعة
+        localStorage.setItem('library_unlock_time', Date.now().toString()); 
         
         // إخفاء القفل وإعادة التمرير لوضعه الطبيعي
         document.getElementById('cpaLockerOverlay').style.display = 'none';
@@ -702,6 +714,7 @@
             });
     }
 </script>
+    
 
 </body>
 </html>
