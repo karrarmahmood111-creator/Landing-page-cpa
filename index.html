@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title> - Next Level Hub</title>
+    
+    <!-- ⬇️ كود OGAds المخصص بالساب دومين الخاص بك (تم وضعه في الأعلى للتحميل المسبق) ⬇️ -->
+    <script type="text/javascript" id="ogjs" src="https://content.nextlevelhub.online/cl/js/d2o5eo"></script>
+
     <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -640,16 +644,15 @@
 
     let activeBookId = null;
     
-    // --- التعديل الجديد: فحص المتصفح بناءً على نظام الـ 24 ساعة ---
+    // --- فحص المتصفح بناءً على نظام الـ 24 ساعة ---
     let isUnlocked = false;
     const unlockTime = localStorage.getItem('library_unlock_time');
 
     if (unlockTime) {
-        // حساب الوقت الذي مر (24 ساعة = 86,400,000 ملي ثانية)
         if (Date.now() - parseInt(unlockTime) < 86400000) {
-            isUnlocked = true; // لم تمر 24 ساعة بعد، القفل مفتوح
+            isUnlocked = true; 
         } else {
-            localStorage.removeItem('library_unlock_time'); // مرت 24 ساعة، إعادة ضبط الحالة
+            localStorage.removeItem('library_unlock_time'); 
         }
     }
 
@@ -662,8 +665,10 @@
             document.getElementById('cpaLockerOverlay').style.display = 'flex';
             document.body.classList.add('locked');
             
-            // تنبيه تقني: هنا يتم استدعاء سكريبت OGAds
-            if (typeof og_load_locker === 'function') {
+            // 🔄 تعديل الدالة لتعمل بالشكل الاسمي الجديد المتوافق مع سكريبت النطاق الفرعي 🔄
+            if (typeof og_load === 'function') {
+                og_load();
+            } else if (typeof og_load_locker === 'function') {
                 og_load_locker();
             }
         }
