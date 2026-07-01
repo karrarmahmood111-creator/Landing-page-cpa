@@ -568,44 +568,31 @@
     };
 
     let activeBookId = null;
-    let isUnlocked = false;
-    const unlockTime = localStorage.getItem('library_unlock_time');
-
-    if (unlockTime && (Date.now() - parseInt(unlockTime) < 86400000)) {
-        isUnlocked = true; 
-    } else {
-        localStorage.removeItem('library_unlock_time'); 
-    }
+    
+    // ⚠️ تم إلغاء الـ localStorage هنا إجبارياً وتعيينها false دائماً لغرض الفحص الآن
+    let isUnlocked = false; 
 
     function startDownload(id) {
         activeBookId = id;
-        
-        // 🚨 رادار الفحص الأول: اختبار حالة القفل
-        alert("فحص: حالة الجلسة الحالية isUnlocked تساوي = " + isUnlocked);
 
         if (isUnlocked) {
-            alert("الكود يرى أن القفل مفتوح مسبقاً! سيتم التحميل مباشرة.");
             executeDownload(activeBookId);
         } else {
-            // 🚨 رادار الفحص الثاني: هل سكريبت OGAds مقروء؟
+            // محاولة استدعاء دالة شركة OGAds الرسمية
             if (typeof og_load === 'function') {
-                alert("نجاح: دالة og_load موجودة ومعرّفة! سيتم استدعاؤها الآن لإظهار القفل.");
                 og_load();
             } else if (typeof og_load_locker === 'function') {
-                alert("نجاح: تم العثور على دالة og_load_locker البديلة! جاري الاستدعاء.");
                 og_load_locker();
             } else {
-                // 🚨 رادار الفحص الثالث: الكود لم يجد دالة الشركة
-                alert("تنبيه برمي: دالة الشركة (og_load) غير موجودة بالصفحة! الكود مجبر الآن على التخطّي وتحميل الكتاب.");
+                // إذا لم يجد دالة الشركة نهائياً (بسبب حظر الساب دومين أو عدم تحميل السكريبت)
+                alert("تنبيه برمي: المتصفح عاجز عن قراءة سكريبت OGAds من الساب دومين! تأكد من ربط الدومين بشكل صحيح.");
                 executeDownload(activeBookId);
             }
         }
     }
 
     function onCPAComplete() {
-        alert("🔥 شركة OGAds استدعت دالة الإكمال بنجاح!");
         isUnlocked = true;
-        localStorage.setItem('library_unlock_time', Date.now().toString()); 
         if (activeBookId) {
             executeDownload(activeBookId);
         }
