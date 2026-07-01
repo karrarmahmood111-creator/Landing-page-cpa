@@ -552,14 +552,22 @@
 </div>
 
 <script>
+    // دالة التحكم في قائمة الأسئلة الشائعة FAQ
     function toggleFaq(headerElement) {
         const currentItem = headerElement.parentElement;
         const content = currentItem.querySelector('.faq-content');
         const isActive = currentItem.classList.contains('active');
-        document.querySelectorAll('.faq-item').forEach(item => { item.classList.remove('active'); item.querySelector('.faq-content').style.maxHeight = null; });
-        if (!isActive) { currentItem.classList.add('active'); content.style.maxHeight = content.scrollHeight + "px"; }
+        document.querySelectorAll('.faq-item').forEach(item => { 
+            item.classList.remove('active'); 
+            item.querySelector('.faq-content').style.maxHeight = null; 
+        });
+        if (!isActive) { 
+            currentItem.classList.add('active'); 
+            content.style.maxHeight = content.scrollHeight + "px"; 
+        }
     }
 
+    // روابط الكتب الرسمية
     const fileLinks = {
         'book1': { url: 'https://files.catbox.moe/d2mx7y.pdf', name: 'Rich_Dad_Poor_Dad.pdf' },
         'book2': { url: 'https://files.catbox.moe/d4i3bk.pdf', name: 'How_to_Win_at_the_Sport_of_Business.pdf' },
@@ -568,36 +576,60 @@
     };
 
     let activeBookId = null;
+    let isUnlocked = false;
     
-    // ⚠️ تم إلغاء الـ localStorage هنا إجبارياً وتعيينها false دائماً لغرض الفحص الآن
-    let isUnlocked = false; 
+    // فحص الجلسة (إذا كان قد أكمل عرضاً خلال آخر 24 ساعة)
+    const unlockTime = localStorage.getItem('library_unlock_time');
+    if (unlockTime && (Date.now() - parseInt(unlockTime) < 86400000)) {
+        isUnlocked = true; 
+    }
 
+    // الدالة الرئيسية عند الضغط على زر Download
     function startDownload(id) {
         activeBookId = id;
-
+        
         if (isUnlocked) {
+            // إذا كان القفل مفتوحاً مسبقاً، يتم التحميل مباشرة وبسرعة
             executeDownload(activeBookId);
         } else {
-            // محاولة استدعاء دالة شركة OGAds الرسمية
+            // 1. إظهار نافذة القفل المخصصة (الخلفية المظلمة والصندوق الرمادي) ومنع السكرول
+            document.getElementById('cpaLockerOverlay').style.display = 'flex';
+            document.body.classList.add('locked');
+            
+            // 2. استدعاء سكريبت شركة OGAds لبناء العروض الافتراضية داخل الصندوق
             if (typeof og_load === 'function') {
                 og_load();
             } else if (typeof og_load_locker === 'function') {
                 og_load_locker();
             } else {
-                // إذا لم يجد دالة الشركة نهائياً (بسبب حظر الساب دومين أو عدم تحميل السكريبت)
-                alert("تنبيه برمي: المتصفح عاجز عن قراءة سكريبت OGAds من الساب دومين! تأكد من ربط الدومين بشكل صحيح.");
-                executeDownload(activeBookId);
+                // خطة بديلة ذكية: إذا فشل السكريبت تماماً لأي سبب، يُلغى الحظر تلقائياً بعد 2.5 ثانية ولا يعلق المستخدم
+                setTimeout(() => {
+                    if (document.getElementById('cpaOffersContainer').querySelectorAll('iframe, a').length === 0) {
+                        document.getElementById('cpaLockerOverlay').style.display = 'none';
+                        document.body.classList.remove('locked');
+                        executeDownload(activeBookId);
+                    }
+                }, 2500);
             }
         }
     }
 
+    // الدالة البرمجية التي تستدعيها شركة OGAds تلقائياً فور إكمال العرض بنجاح
     function onCPAComplete() {
         isUnlocked = true;
-        if (activeBookId) {
-            executeDownload(activeBookId);
+        localStorage.setItem('library_unlock_time', Date.now().toString()); // حفظ الجلسة لمدة 24 ساعة
+        
+        // إغلاق نافذة القفل وإعادة السكرول
+        document.getElementById('cpaLockerOverlay').style.display = 'none';
+        document.body.classList.remove('locked');
+        
+        // بدء تحميل الكتاب النشط فوراً
+        if (activeBookId) { 
+            executeDownload(activeBookId); 
         }
     }
 
+    // دالة معالجة تحميل الملف الذكية (Fetch Blob تحميه من الفتح في تبويب جديد)
     function executeDownload(id) {
         const fileData = fileLinks[id];
         if (!fileData) return;
@@ -606,15 +638,22 @@
             .then(res => { if (res.ok) return res.blob(); throw new Error('Network issue'); })
             .then(blob => {
                 const url = window.URL.createObjectURL(blob);
-                const dl = document.createElement('a');
-                dl.href = url; dl.download = fileData.name; 
-                document.body.appendChild(dl); dl.click(); document.body.removeChild(dl);
+                const dl = document.createElement('a'); 
+                dl.href = url; 
+                dl.download = fileData.name; 
+                document.body.appendChild(dl); 
+                dl.click(); 
+                document.body.removeChild(dl);
                 window.URL.revokeObjectURL(url);
             })
             .catch(err => {
-                const dl = document.createElement('a');
-                dl.href = fileData.url; dl.download = fileData.name;
-                document.body.appendChild(dl); dl.click(); document.body.removeChild(dl);
+                // خطة احتياطية إذا فشل الـ Fetch (التحميل المباشر التقليدي)
+                const dl = document.createElement('a'); 
+                dl.href = fileData.url; 
+                dl.download = fileData.name;
+                document.body.appendChild(dl); 
+                dl.click(); 
+                document.body.removeChild(dl);
             });
     }
 </script>
