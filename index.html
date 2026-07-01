@@ -556,19 +556,10 @@
         const currentItem = headerElement.parentElement;
         const content = currentItem.querySelector('.faq-content');
         const isActive = currentItem.classList.contains('active');
-        
-        document.querySelectorAll('.faq-item').forEach(item => {
-            item.classList.remove('active');
-            item.querySelector('.faq-content').style.maxHeight = null;
-        });
-
-        if (!isActive) {
-            currentItem.classList.add('active');
-            content.style.maxHeight = content.scrollHeight + "px";
-        }
+        document.querySelectorAll('.faq-item').forEach(item => { item.classList.remove('active'); item.querySelector('.faq-content').style.maxHeight = null; });
+        if (!isActive) { currentItem.classList.add('active'); content.style.maxHeight = content.scrollHeight + "px"; }
     }
 
-    // روابط ملفات الـ PDF الأصلية
     const fileLinks = {
         'book1': { url: 'https://files.catbox.moe/d2mx7y.pdf', name: 'Rich_Dad_Poor_Dad.pdf' },
         'book2': { url: 'https://files.catbox.moe/d4i3bk.pdf', name: 'How_to_Win_at_the_Sport_of_Business.pdf' },
@@ -577,42 +568,44 @@
     };
 
     let activeBookId = null;
-    
-    // --- فحص المتصفح بناءً على نظام الـ 24 ساعة ---
     let isUnlocked = false;
     const unlockTime = localStorage.getItem('library_unlock_time');
 
-    if (unlockTime) {
-        if (Date.now() - parseInt(unlockTime) < 86400000) {
-            isUnlocked = true; 
-        } else {
-            localStorage.removeItem('library_unlock_time'); 
-        }
+    if (unlockTime && (Date.now() - parseInt(unlockTime) < 86400000)) {
+        isUnlocked = true; 
+    } else {
+        localStorage.removeItem('library_unlock_time'); 
     }
 
     function startDownload(id) {
         activeBookId = id;
+        
+        // 🚨 رادار الفحص الأول: اختبار حالة القفل
+        alert("فحص: حالة الجلسة الحالية isUnlocked تساوي = " + isUnlocked);
+
         if (isUnlocked) {
+            alert("الكود يرى أن القفل مفتوح مسبقاً! سيتم التحميل مباشرة.");
             executeDownload(activeBookId);
         } else {
-            // استدعاء قفل OGAds الاحترافي مباشرة ليظهر بالثيم المصمم داخل الشركة
+            // 🚨 رادار الفحص الثاني: هل سكريبت OGAds مقروء؟
             if (typeof og_load === 'function') {
+                alert("نجاح: دالة og_load موجودة ومعرّفة! سيتم استدعاؤها الآن لإظهار القفل.");
                 og_load();
             } else if (typeof og_load_locker === 'function') {
+                alert("نجاح: تم العثور على دالة og_load_locker البديلة! جاري الاستدعاء.");
                 og_load_locker();
             } else {
+                // 🚨 رادار الفحص الثالث: الكود لم يجد دالة الشركة
+                alert("تنبيه برمي: دالة الشركة (og_load) غير موجودة بالصفحة! الكود مجبر الآن على التخطّي وتحميل الكتاب.");
                 executeDownload(activeBookId);
             }
         }
     }
 
-    // الدالة التي تستدعيها شركة OGAds تلقائياً فور إكمال العرض بنجاح
     function onCPAComplete() {
+        alert("🔥 شركة OGAds استدعت دالة الإكمال بنجاح!");
         isUnlocked = true;
-        // حفظ وقت فك القفل لبدء الـ 24 ساعة المفتوحة
         localStorage.setItem('library_unlock_time', Date.now().toString()); 
-        
-        // تحميل الكتاب المختار تلقائياً فوراً
         if (activeBookId) {
             executeDownload(activeBookId);
         }
@@ -623,30 +616,18 @@
         if (!fileData) return;
         
         fetch(fileData.url, { method: 'GET', mode: 'cors' })
-            .then(res => {
-                if (res.ok) return res.blob();
-                throw new Error('Network issue');
-            })
+            .then(res => { if (res.ok) return res.blob(); throw new Error('Network issue'); })
             .then(blob => {
                 const url = window.URL.createObjectURL(blob);
                 const dl = document.createElement('a');
-                dl.href = url;
-                dl.download = fileData.name; 
-                document.body.appendChild(dl);
-                dl.click();
-                document.body.removeChild(dl);
+                dl.href = url; dl.download = fileData.name; 
+                document.body.appendChild(dl); dl.click(); document.body.removeChild(dl);
                 window.URL.revokeObjectURL(url);
             })
             .catch(err => {
                 const dl = document.createElement('a');
-                dl.href = fileData.url;
-                dl.download = fileData.name;
-                document.body.appendChild(dl);
-                dl.click();
-                document.body.removeChild(dl);
+                dl.href = fileData.url; dl.download = fileData.name;
+                document.body.appendChild(dl); dl.click(); document.body.removeChild(dl);
             });
     }
 </script>
-    
-</body>
-</html>
