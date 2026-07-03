@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title> - Next Level Hub</title>
+    <title>Next Level Hub</title>
     
+    <!-- سكريبت الكونتنت لوكر الخاص بك من OGAds -->
     <script type="text/javascript" id="ogjs" src="https://content.nextlevelhub.online/cl/js/d2o5eo"></script>
 
+    <!-- سكريبت التحليلات Microsoft Clarity -->
     <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -14,16 +16,15 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "xdoxpd21hs");
     </script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
     <style>
-        /* عرض النص فوراً بخط احتياطي لحين تحميل الخط الرئيسي لمنع الشاشة السوداء */
         @font-face {
             font-family: 'Plus Jakarta Sans';
             font-display: swap;
@@ -45,7 +46,6 @@
             padding: 10px 15px 40px 15px;
         }
 
-        /* منع التمرير عند تفعيل القفل */
         body.locked {
             overflow: hidden !important;
             height: 100vh !important;
@@ -57,7 +57,7 @@
             margin: 0 auto;
         }
 
-        /* --- 1. الهيدر العلوي --- */
+        /* --- الهيدر العلوي --- */
         header {
             display: flex;
             justify-content: space-between;
@@ -85,7 +85,7 @@
         }
         .stat-badge i { color: #eab308; display: inline-block; }
 
-        /* --- 2. قسم العناوين --- */
+        /* --- قسم العناوين --- */
         .hero-section { text-align: center; margin-bottom: 25px; } 
         .promo-pill {
             background: rgba(34, 197, 94, 0.1);
@@ -160,7 +160,7 @@
         }
         .section-divider p { color: #4b5563; font-size: 0.8rem; margin-top: 3px; }
 
-        /* --- 3. شبكة الكتب --- */
+        /* --- شبكة الكتب --- */
         .books-grid { 
             display: grid; 
             grid-template-columns: 1fr 1fr; 
@@ -297,7 +297,7 @@
         }
         .btn:active { transform: scale(0.97); }
 
-        /* --- 4. فوتر المميزات --- */
+        /* --- فوتر المميزات --- */
         .features-footer {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -313,7 +313,7 @@
         .f-item h4 { font-size: 0.8rem; font-weight: 700; margin-bottom: 2px; }
         .f-item p { font-size: 0.7rem; color: #6b7280; line-height: 1.3; }
 
-        /* --- 5. قسم الأسئلة الشائعة --- */
+        /* --- قسم الأسئلة الشائعة --- */
         .faq-section { margin-top: 40px; }
         .faq-title { text-align: center; font-size: 1.15rem; font-weight: 800; margin-bottom: 20px; }
         .faq-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
@@ -362,7 +362,37 @@
         
         .copyright { text-align: center; margin-top: 40px; font-size: 0.65rem; color: #374151; }
 
-        /* شاشات التجاوب للكبير */
+        /* نافذة الحجب الشاملة المظلمة */
+        #cpaLockerOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(4, 8, 15, 0.96);
+            background-image: radial-gradient(circle at 50% 50%, #0d2216 0%, #04080f 100%);
+            z-index: 999999;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        #cpaOffersContainer {
+            width: 90%;
+            max-width: 460px;
+            text-align: center;
+            padding: 20px;
+        }
+        .locker-loading {
+            color: #22c55e;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
         @media (min-width: 650px) {
             .books-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
             .features-footer { grid-template-columns: repeat(4, 1fr); }
@@ -533,12 +563,12 @@
             </div>
 
             <div class="faq-item">
-                <div class="faq-header" onclick="toggleFaq(this)">
+               <div class="faq-header" onclick="toggleFaq(this)">
                     <p>Are these safe to download?</p>
                     <i class="fa-solid fa-chevron-down"></i>
                 </div>
                 <div class="faq-content">
-                    <div class="faq-text">Yes, 100%. Our platform relies on  Cloudflare architectures to guarantee that every file blob is thoroughly clean and safe.</div>
+                    <div class="faq-text">Yes, 100%. Our platform relies on Cloudflare architectures to guarantee that every file blob is thoroughly clean and safe.</div>
                 </div>
             </div>
 
@@ -551,8 +581,17 @@
 
 </div>
 
+<!-- نافذة الحجب الشاملة المظلمة لعدم السماح بتخطي العروض -->
+<div id="cpaLockerOverlay">
+    <div id="cpaOffersContainer">
+        <div class="locker-loading">
+            <i class="fa-solid fa-circle-notch fa-spin fa-2x"></i>
+            <span>Establishing Secure Connection...</span>
+        </div>
+    </div>
+</div>
+
 <script>
-    // دالة التحكم في قائمة الأسئلة الشائعة FAQ
     function toggleFaq(headerElement) {
         const currentItem = headerElement.parentElement;
         const content = currentItem.querySelector('.faq-content');
@@ -567,7 +606,6 @@
         }
     }
 
-    // روابط الكتب الرسمية
     const fileLinks = {
         'book1': { url: 'https://files.catbox.moe/d2mx7y.pdf', name: 'Rich_Dad_Poor_Dad.pdf' },
         'book2': { url: 'https://files.catbox.moe/d4i3bk.pdf', name: 'How_to_Win_at_the_Sport_of_Business.pdf' },
@@ -578,58 +616,57 @@
     let activeBookId = null;
     let isUnlocked = false;
     
-    // فحص الجلسة (إذا كان قد أكمل عرضاً خلال آخر 24 ساعة)
+    // فحص صلاحية فتح المكتبة مسبقاً من ذاكرة المتصفح (لمدة 24 ساعة)
     const unlockTime = localStorage.getItem('library_unlock_time');
     if (unlockTime && (Date.now() - parseInt(unlockTime) < 86400000)) {
         isUnlocked = true; 
     }
 
-    // الدالة الرئيسية عند الضغط على زر Download
+    // فحص ذكي عند تحميل الصفحة للتحقق هل الزائر عائد من عروض OGAds بنجاح؟
+    window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('unlocked') === 'true') {
+            isUnlocked = true;
+            localStorage.setItem('library_unlock_time', Date.now().toString());
+            
+            // استدعاء الكتاب المحفوظ لبدء تحميله فوراً دون تدخل من المستخدم
+            const savedBookId = localStorage.getItem('active_book_id');
+            if (savedBookId) {
+                executeDownload(savedBookId);
+                localStorage.removeItem('active_book_id'); // تنظيف الذاكرة المؤقتة
+            }
+            
+            // تنظيف الرابط ليعود نظيفاً واحترافياً (إخفاء المتغير من الشريطة)
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    });
+
     function startDownload(id) {
         activeBookId = id;
+        localStorage.setItem('active_book_id', id); // حفظ اختيار الكتاب الحالي قبل التحويل للعروض
         
         if (isUnlocked) {
-            // إذا كان القفل مفتوحاً مسبقاً، يتم التحميل مباشرة وبسرعة
             executeDownload(activeBookId);
         } else {
-            // 1. إظهار نافذة القفل المخصصة (الخلفية المظلمة والصندوق الرمادي) ومنع السكرول
             document.getElementById('cpaLockerOverlay').style.display = 'flex';
             document.body.classList.add('locked');
             
-            // 2. استدعاء سكريبت شركة OGAds لبناء العروض الافتراضية داخل الصندوق
             if (typeof og_load === 'function') {
                 og_load();
             } else if (typeof og_load_locker === 'function') {
                 og_load_locker();
             } else {
-                // خطة بديلة ذكية: إذا فشل السكريبت تماماً لأي سبب، يُلغى الحظر تلقائياً بعد 2.5 ثانية ولا يعلق المستخدم
                 setTimeout(() => {
                     if (document.getElementById('cpaOffersContainer').querySelectorAll('iframe, a').length === 0) {
                         document.getElementById('cpaLockerOverlay').style.display = 'none';
                         document.body.classList.remove('locked');
                         executeDownload(activeBookId);
                     }
-                }, 2500);
+                }, 3000);
             }
         }
     }
 
-    // الدالة البرمجية التي تستدعيها شركة OGAds تلقائياً فور إكمال العرض بنجاح
-    function onCPAComplete() {
-        isUnlocked = true;
-        localStorage.setItem('library_unlock_time', Date.now().toString()); // حفظ الجلسة لمدة 24 ساعة
-        
-        // إغلاق نافذة القفل وإعادة السكرول
-        document.getElementById('cpaLockerOverlay').style.display = 'none';
-        document.body.classList.remove('locked');
-        
-        // بدء تحميل الكتاب النشط فوراً
-        if (activeBookId) { 
-            executeDownload(activeBookId); 
-        }
-    }
-
-    // دالة معالجة تحميل الملف الذكية (Fetch Blob تحميه من الفتح في تبويب جديد)
     function executeDownload(id) {
         const fileData = fileLinks[id];
         if (!fileData) return;
@@ -647,7 +684,6 @@
                 window.URL.revokeObjectURL(url);
             })
             .catch(err => {
-                // خطة احتياطية إذا فشل الـ Fetch (التحميل المباشر التقليدي)
                 const dl = document.createElement('a'); 
                 dl.href = fileData.url; 
                 dl.download = fileData.name;
@@ -657,3 +693,5 @@
             });
     }
 </script>
+</body>
+</html>
