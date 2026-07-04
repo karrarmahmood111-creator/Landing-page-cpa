@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Next Level Hub</title>
     
-    <!-- سكريبت الكونتنت لوكر الخاص بك من OGAds -->
     <script type="text/javascript" id="ogjs" src="https://content.nextlevelhub.online/cl/js/d2o5eo"></script>
 
-    <!-- سكريبت التحليلات Microsoft Clarity -->
     <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -57,7 +55,6 @@
             margin: 0 auto;
         }
 
-        /* --- الهيدر العلوي --- */
         header {
             display: flex;
             justify-content: space-between;
@@ -85,7 +82,6 @@
         }
         .stat-badge i { color: #eab308; display: inline-block; }
 
-        /* --- قسم العناوين --- */
         .hero-section { text-align: center; margin-bottom: 25px; } 
         .promo-pill {
             background: rgba(34, 197, 94, 0.1);
@@ -160,7 +156,6 @@
         }
         .section-divider p { color: #4b5563; font-size: 0.8rem; margin-top: 3px; }
 
-        /* --- شبكة الكتب --- */
         .books-grid { 
             display: grid; 
             grid-template-columns: 1fr 1fr; 
@@ -297,7 +292,6 @@
         }
         .btn:active { transform: scale(0.97); }
 
-        /* --- فوتر المميزات --- */
         .features-footer {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -313,7 +307,6 @@
         .f-item h4 { font-size: 0.8rem; font-weight: 700; margin-bottom: 2px; }
         .f-item p { font-size: 0.7rem; color: #6b7280; line-height: 1.3; }
 
-        /* --- قسم الأسئلة الشائعة --- */
         .faq-section { margin-top: 40px; }
         .faq-title { text-align: center; font-size: 1.15rem; font-weight: 800; margin-bottom: 20px; }
         .faq-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
@@ -362,7 +355,6 @@
         
         .copyright { text-align: center; margin-top: 40px; font-size: 0.65rem; color: #374151; }
 
-        /* نافذة الحجب الشاملة المظلمة */
         #cpaLockerOverlay {
             display: none;
             position: fixed;
@@ -581,7 +573,6 @@
 
 </div>
 
-<!-- نافذة الحجب الشاملة المظلمة لعدم السماح بتخطي العروض -->
 <div id="cpaLockerOverlay">
     <div id="cpaOffersContainer">
         <div class="locker-loading">
@@ -616,34 +607,39 @@
     let activeBookId = null;
     let isUnlocked = false;
     
-    // فحص صلاحية فتح المكتبة مسبقاً من ذاكرة المتصفح (لمدة 24 ساعة)
+    // 1. فحص الصلاحية الزمنية للمستخدم الحالي (24 ساعة)
     const unlockTime = localStorage.getItem('library_unlock_time');
     if (unlockTime && (Date.now() - parseInt(unlockTime) < 86400000)) {
         isUnlocked = true; 
     }
 
-    // فحص ذكي عند تحميل الصفحة للتحقق هل الزائر عائد من عروض OGAds بنجاح؟
+    // 2. الفحص الذكي والآمن لحماية الرابط عند العودة من عروض OGAds
     window.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('unlocked') === 'true') {
+        const savedBookId = localStorage.getItem('active_book_id');
+        
+        // جدار الأمان: لن يتم التخطي إلا إذا كان الرابط صحيحاً وكان الجهاز الحالي قد ضغط على زر كتاب بالفعل
+        if (urlParams.get('unlocked') === 'true' && savedBookId) {
             isUnlocked = true;
             localStorage.setItem('library_unlock_time', Date.now().toString());
             
-            // استدعاء الكتاب المحفوظ لبدء تحميله فوراً دون تدخل من المستخدم
-            const savedBookId = localStorage.getItem('active_book_id');
-            if (savedBookId) {
-                executeDownload(savedBookId);
-                localStorage.removeItem('active_book_id'); // تنظيف الذاكرة المؤقتة
-            }
+            // بدء تحميل الكتاب النشط أوتوماتيكياً
+            executeDownload(savedBookId);
+            localStorage.removeItem('active_book_id'); // تنظيف المعرف المؤقت لقفل الثغرة
             
-            // تنظيف الرابط ليعود نظيفاً واحترافياً (إخفاء المتغير من الشريطة)
+            // تنظيف الرابط وحذف البارامترات فوراً لمنع الزائر من نسخه وإرساله للآخرين
             window.history.replaceState({}, document.title, window.location.pathname);
+        } else {
+            // تنظيف فوري وإبقاء الحظر لو حاول شخص الدخول مباشرة بالرابط المنسوخ بالكامل
+            if (urlParams.get('unlocked') === 'true') {
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
         }
     });
 
     function startDownload(id) {
         activeBookId = id;
-        localStorage.setItem('active_book_id', id); // حفظ اختيار الكتاب الحالي قبل التحويل للعروض
+        localStorage.setItem('active_book_id', id); // تسجيل محاولة تحميل الكتاب على متصفح هذا الجهاز
         
         if (isUnlocked) {
             executeDownload(activeBookId);
